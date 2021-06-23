@@ -1,5 +1,7 @@
 package cn.com.lee.nio.simpleDemo;
 
+import org.junit.jupiter.api.Test;
+
 import java.nio.Buffer;
 import java.nio.IntBuffer;
 
@@ -11,6 +13,73 @@ import java.nio.IntBuffer;
  */
 public class BufferUsage {
 
+    /**
+     * rewind --一定要在读模式下面操作！
+     * 已读完的数据再读一遍
+     */
+    @Test
+    public void rewindTest(){
+        IntBuffer intBuffer = getIntBuffer();
+        intBuffer.flip();//如果不调用flip方法，那么下面的操作会让position继续累加
+        for(int i = intBuffer.position(); i<intBuffer.limit();i++){
+            System.out.println(intBuffer.get());
+        }
+        System.out.println("---遍历intBuffer后---");
+
+        printBufferInfo(intBuffer);
+        /**
+         * position = 0;
+         * mark = -1;
+         */
+        intBuffer.rewind();//会重置position ,清除mark
+        System.out.println("---调用rewind()方法后---");
+        printBufferInfo(intBuffer);
+
+
+    }
+
+    /**
+     * 读的时候标记和reset
+     */
+    @Test
+    public void markAndResetTest(){
+        IntBuffer intBuffer = getIntBuffer();
+        intBuffer.flip();//转成读模式
+        for(int i = 0; i<2;i++){
+            System.out.println(intBuffer.get());
+        }
+        System.out.println("---读取2个元素以后---");
+        printBufferInfo(intBuffer);
+
+        //mark = position;
+        intBuffer.mark();
+        System.out.println("---调用mark()方法后---");
+        printBufferInfo(intBuffer); //position = 2
+
+        for(int i = 0; i<2;i++){
+            System.out.println(intBuffer.get());
+        }
+        System.out.println("---再读取2个元素以后---");
+        printBufferInfo(intBuffer); //position = 4
+        //position = mark;
+        intBuffer.reset();
+        System.out.println("---调用reset()以后---");
+        printBufferInfo(intBuffer); //position = 2
+
+
+    }
+
+    private static IntBuffer getIntBuffer(){
+        IntBuffer intBuffer = IntBuffer.allocate(20);
+        System.out.println("------------创建buffer实例后------------");
+        printBufferInfo(intBuffer);
+        for(int i = 0; i<5;i++){//通过put方法写入5个元素
+            intBuffer.put(i);
+        }
+        System.out.println("---写入5个元素后---");
+        printBufferInfo(intBuffer);
+        return intBuffer;
+    }
     private static void printBufferInfo(Buffer buffer) {
         System.out.println("开始打印buffer的信息：");
         System.out.println("-->position = " + buffer.position());
