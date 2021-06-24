@@ -10,6 +10,13 @@ import java.nio.IntBuffer;
  * Buffer 有8个子类，一次是Byte,MappedByte,Char,Short,Integer,Long,Float,Double
  * 它有capacity，limit，position3个重要的属性
  * allocate(),put(),flip(),clear(),reset(),rewind()等方法。
+ *
+ * 使用Java NIO Buffer类的基本步骤如下
+ * （1）使用创建子类实例对象的allocate()方法创建一个Buffer类的实例对象。
+ * （2）调用put()方法将数据写入缓冲区中。
+ * （3）写入完成后，在开始读取数据前调用Buffer.flip()方法，将缓冲区转换为读模式。
+ * （4）调用get()方法，可以从缓冲区中读取数据。
+ * （5）读取完成后，调用Buffer.clear()方法或Buffer.compact()方法，将缓冲区转换为写模式，可以继续写入。
  */
 public class BufferUsage {
 
